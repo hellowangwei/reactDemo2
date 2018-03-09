@@ -34,6 +34,10 @@ var webpackConfig = {
                 target: 'http://test.wangxiyang.com:8000',
                 secure: false
             },
+            '/api-img': {
+                target: 'http://test.wangxiyang.com:8000',
+                secure: false
+            },
         }
     },
     plugins: [],
