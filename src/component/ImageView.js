@@ -126,7 +126,7 @@ class ImageView extends Component {
     }
     viewQuestion=(id)=>{
         let url = config.host+`/api-img/img_ques/${id}/`
-        this.setState({loading:true,questions:[],viewQuestion:true,})
+        this.setState({loading:true,questions:[],imgList:[],viewQuestion:true,})
         axios(url)
             .then((response)=>{
                 this.setState({questions:response.data,loading:false})
@@ -152,6 +152,35 @@ class ImageView extends Component {
 
     showImg=(id)=>{
         this.setState({imgView:id,imgViewSwitch:true})
+    }
+    closeQuestion=()=>{
+        this.setState({viewQuestion:false})
+        this.closeAudio()
+    }
+
+    closeAudio = ()=>{
+        let audios = document.querySelectorAll('audio')
+        audios.forEach((audio)=>{
+            if(audio!==null){
+                if(audio.paused)                     {
+                }else{
+                    audio.pause();// 这个就是暂停
+                }
+            }
+        })
+
+    }
+    audioOnclick = (className)=>{
+        let audio = document.querySelector(`.${className}`)
+            if(audio!==null){
+                if(audio.paused) {
+                    this.closeAudio()
+                    audio.play();// 这个就是暂停
+                }else{
+                    audio.pause();// 这个就是暂停
+                }
+            }
+
     }
     render() {
         const {page,token,images,pagination,questions,loading,imgList} = this.state
@@ -186,7 +215,7 @@ class ImageView extends Component {
                     </div>
 
                 </div>
-                <Modal width={1000} footer={null} title="查看图片题目" visible={this.state.viewQuestion} onCancel={()=>this.setState({viewQuestion:false})}>
+                <Modal width={1000} footer={null} title="查看图片题目" visible={this.state.viewQuestion} onCancel={this.closeQuestion}>
                     <div style={{position:'relative'}}>
                         <div style={{minHeight:100,width:'75%',posision:'relative'}}>
                             <Spin spinning={loading}>
@@ -207,9 +236,9 @@ class ImageView extends Component {
                                                     <div style={{position:'relative',paddingRight:'100px'}}>
                                                         <div>
                                                             {
-                                                                val.listen_url||1&&
-                                                                <div style={{border:'3px solid red',margin:'10px 0'}}>
-                                                                    <audio src={val.listen_url} controls="controls">您的浏览器不支持
+                                                                val.listen_url&&
+                                                                <div style={{border:'3px solid red',margin:'10px 0'}} onClick={()=>{this.audioOnclick('audio'+val.id)}}>
+                                                                    <audio src={val.listen_url} className={'audio'+val.id} controls="controls">您的浏览器不支持
                                                                     </audio>
                                                                 </div>
                                                             }
